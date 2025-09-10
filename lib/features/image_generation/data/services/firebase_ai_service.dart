@@ -82,13 +82,6 @@ class FirebaseAIService {
         }
       }
 
-      // Also check inlineDataParts for backward compatibility
-      if (response.inlineDataParts.isNotEmpty) {
-        for (final inlineData in response.inlineDataParts) {
-          images.add(inlineData.bytes);
-        }
-      }
-
       if (images.isEmpty) {
         throw Exception('No images were generated from the model');
       }
@@ -164,13 +157,6 @@ class FirebaseAIService {
           } else if (part is InlineDataPart) {
             images.add(part.bytes);
           }
-        }
-      }
-
-      // Also check inlineDataParts for backward compatibility
-      if (response.inlineDataParts.isNotEmpty) {
-        for (final inlineData in response.inlineDataParts) {
-          images.add(inlineData.bytes);
         }
       }
 
