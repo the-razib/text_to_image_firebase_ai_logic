@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:share_plus/share_plus.dart';
 
 class GeneratedImageWidget extends StatefulWidget {
   final Uint8List imageData;
@@ -58,24 +60,19 @@ class _GeneratedImageWidgetState extends State<GeneratedImageWidget>
     });
 
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      final imageDir = Directory('${directory.path}/generated_images');
+      final result = await ImageGallerySaver.saveImage(
+        widget.imageData,
+        quality: 95,
+        name: 'generated_image_${DateTime.now().millisecondsSinceEpoch}',
+      );
 
-      if (!await imageDir.exists()) {
-        await imageDir.create(recursive: true);
-      }
-
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final fileName =
-          'generated_image_${timestamp}_${widget.imageIndex + 1}.png';
-      final file = File('${imageDir.path}/$fileName');
-
-      await file.writeAsBytes(widget.imageData);
-
-      AppLogger.info('Image saved successfully: $fileName');
-
-      if (mounted) {
-        _showSnackBar('Image saved to documents folder');
+      if (result['isSuccess']) {
+        AppLogger.info('Image saved to gallery successfully: ${result["filePath"]}');
+        if (mounted) {
+          _showSnackBar('Image saved to Gallery');
+        }
+      } else {
+        throw Exception('Failed to save image to gallery');
       }
     } catch (e, stackTrace) {
       AppLogger.error('Failed to save image', e, stackTrace);
@@ -92,15 +89,28 @@ class _GeneratedImageWidgetState extends State<GeneratedImageWidget>
   }
 
   void _copyToClipboard() {
-    // Note: Copying image to clipboard requires platform-specific implementation
-    _showSnackBar(
-      'Image data copied (functionality requires platform implementation)',
-    );
+    _showSnackBar('Image saved to gallery instead of clipboard.');
+    _saveImage();
   }
 
-  void _shareImage() {
-    // Note: Sharing requires platform-specific implementation
-    _showSnackBar('Share functionality requires platform implementation');
+  Future<void> _shareImage() async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final file = await File('${tempDir.path}/image.png').create();
+      await file.writeAsBytes(widget.imageData);
+
+      final xFile = XFile(file.path);
+
+      await Share.shareXFiles(
+        [xFile],
+        text: 'Generated with AI: "${widget.prompt}"'
+      );
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to share image', e, stackTrace);
+      if (mounted) {
+        _showSnackBar('Failed to share image: ${e.toString()}');
+      }
+    }
   }
 
   void _showSnackBar(String message) {
