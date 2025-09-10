@@ -7,9 +7,16 @@ A beautiful, performant Flutter application that generates images from text prom
 
 ## App Preview
 
-*(Here you can add a screenshot or GIF of the app in action)*
-
-![App Preview Placeholder](https://user-images.githubusercontent.com/26283493/188342993-94438a9a-a239-42b2-a59a-8175a33a8e43.png)
+<table width="100%">
+ <tr>
+    <td align="center" width="50%">
+      <img src="assets/images/1.png" alt="App Screenshot 1" />
+    </td>
+    <td align="center" width="50%">
+      <img src="assets/images/2.png" alt="App Screenshot 2" />
+    </td>
+ </tr>
+</table>
 
 
 ## Features
