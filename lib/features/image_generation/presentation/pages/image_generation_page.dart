@@ -20,6 +20,8 @@ class _ImageGenerationPageState extends State<ImageGenerationPage>
     with TickerProviderStateMixin {
   final TextEditingController _promptController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  final FocusNode _promptFocusNode = FocusNode();
+  final int _maxPromptLength = 500;
 
   bool _isLoading = false;
   bool _isInitialized = false;
@@ -149,13 +151,14 @@ class _ImageGenerationPageState extends State<ImageGenerationPage>
     _promptController.dispose();
     _scrollController.dispose();
     _fadeController.dispose();
+    _promptFocusNode.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor.withValues(alpha: 0.8),
+      backgroundColor: AppColors.backgroundColor.withOpacity(0.8),
       appBar: AppBar(
         title: const Text(
           'AI Image Generator',
@@ -226,22 +229,60 @@ class _ImageGenerationPageState extends State<ImageGenerationPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Describe the image you want to generate',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+          Row(
+            children: [
+              const Icon(
+                Icons.edit_outlined,
+                color: AppColors.primaryMuted,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              const Text(
+                'Your Prompt',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.textPrimary,
+                ),
+              ),
+            ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           NeumorphicTextField(
             controller: _promptController,
+            focusNode: _promptFocusNode,
             hintText:
                 'e.g., A beautiful sunset over mountains with soft colors',
             maxLines: 4,
+            maxLength: _maxPromptLength,
             keyboardType: TextInputType.multiline,
             onChanged: (value) => setState(() {}),
+            suffixIcon: _promptController.text.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.clear,
+                      color: AppColors.textHint,
+                      size: 20,
+                    ),
+                    onPressed: () {
+                      _promptController.clear();
+                      setState(() {});
+                    },
+                  )
+                : null,
+          ),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              '${_promptController.text.length}/${_maxPromptLength}',
+              style: TextStyle(
+                color: _promptController.text.length > _maxPromptLength
+                    ? AppColors.errorColor
+                    : AppColors.textHint,
+                fontSize: 12,
+              ),
+            ),
           ),
         ],
       ),
@@ -328,7 +369,7 @@ class _ImageGenerationPageState extends State<ImageGenerationPage>
 
   Widget _buildErrorSection() {
     return NeumorphicCard(
-      backgroundColor: AppColors.errorColor.withValues(alpha: 0.1),
+      backgroundColor: AppColors.errorColor.withOpacity(0.1),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
