@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "985102935467",
+    "project_id": "flutter-crashanalytics-5f028",
+    "storage_bucket": "flutter-crashanalytics-5f028.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985102935467:android:b632891deeeea4d3991eee",
+        "android_client_info": {
+          "package_name": "com.example.firebase_ai_logic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-sG_dvMSTXTIBIhMsJ3Rk99HQVR3Oy28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:985102935467:android:f5b55e69b8a7f175991eee",
+        "android_client_info": {
+          "package_name": "com.example.firebase_crashlytics"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-sG_dvMSTXTIBIhMsJ3Rk99HQVR3Oy28"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
